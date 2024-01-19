@@ -17,6 +17,79 @@ export default class FilteringFactory {
         return requiredProperties.every((prop) => prop in query);
     }
 
+    public static querySwitch<T>(C: QGlobal<string>, Query: T, CNum: number) {
+        switch (C.type) {
+            /**
+             * DEF
+             */
+            case "DEF":
+                FilterQueries.DEFQuery(Query, C);
+                break;
+            /**
+             * Boolean
+             */
+            case "BOOLEAN":
+                FilterQueries.BOOLQuery(Query, C);
+                break;
+            case "EQ":
+                FilterQueries.EQQuery(Query, C);
+                break;
+            case "NAME":
+                FilterQueries.NAMEQuery(Query, C);
+                break;
+            case "NEQ":
+                FilterQueries.NEQQuery(Query, C);
+                break;
+            case "IN":
+                FilterQueries.INQuery(Query, C);
+                break;
+            case "INF":
+                FilterQueries.INFQuery(Query, C);
+                break;
+            case "GTE":
+                FilterQueries.GTEQuery(Query, C, CNum);
+                break;
+            case "GTES":
+                FilterQueries.GTESQuery(Query, C);
+                break;
+            case "GT":
+                FilterQueries.GTQuery(Query, C, CNum);
+                break;
+            case "LTE":
+                FilterQueries.LTEQuery(Query, C, CNum);
+                break;
+            case "LT":
+                FilterQueries.LTQuery(Query, C, CNum);
+                break;
+            case "INC":
+                FilterQueries.INCQuery(Query, C, CNum);
+                break;
+            case "OR":
+                FilterQueries.ORQuery(Query, C);
+                break;
+            case "ORF":
+                FilterQueries.ORFQuery(Query, C);
+                break;
+            case "AND":
+                FilterQueries.ANDQuery(Query, C);
+                break;
+            case "ANDF":
+                FilterQueries.ANDFQuery(Query, C);
+                break;
+            case "EXPR":
+                FilterQueries.EXPRQuery(Query, C);
+                break;
+            case "EQGRS":
+                FilterQueries.EQGRSQuery(Query, C);
+                break;
+            case "EQGR":
+                FilterQueries.EQGRQuery(Query, C, CNum);
+                break;
+            default:
+                break;
+        }
+    }
+
     static GenerateQuery<T>(
         Q: QGlobal<T>[] extends {} ? QGlobal<string>[] : QGlobal[]
     ): T {
@@ -35,78 +108,13 @@ export default class FilteringFactory {
                     CNum = parseInt(
                         typeof C.input === "string" ? C.input : "0"
                     );
+                    if (isNaN(CNum))
+                        throw new Error(
+                            "Unknown value, please check input or value"
+                        );
                 }
                 if (C.type === "DEFNUM") C.type = "DEF";
-                switch (C.type) {
-                    /**
-                     * DEF
-                     */
-                    case "DEF":
-                        FilterQueries.DEFQuery(Query, C);
-                        break;
-                    /**
-                     * Boolean
-                     */
-                    case "BOOLEAN":
-                        FilterQueries.BOOLQuery(Query, C);
-                        break;
-                    case "EQ":
-                        FilterQueries.EQQuery(Query, C);
-                        break;
-                    case "NAME":
-                        FilterQueries.NAMEQuery(Query, C);
-                        break;
-                    case "NEQ":
-                        FilterQueries.NEQQuery(Query, C);
-                        break;
-                    case "IN":
-                        FilterQueries.INQuery(Query, C);
-                        break;
-                    case "INF":
-                        FilterQueries.INFQuery(Query, C);
-                        break;
-                    case "GTE":
-                        FilterQueries.GTEQuery(Query, C, CNum);
-                        break;
-                    case "GTES":
-                        FilterQueries.GTESQuery(Query, C);
-                        break;
-                    case "GT":
-                        FilterQueries.GTQuery(Query, C, CNum);
-                        break;
-                    case "LTE":
-                        FilterQueries.LTEQuery(Query, C, CNum);
-                        break;
-                    case "LT":
-                        FilterQueries.LTQuery(Query, C, CNum);
-                        break;
-                    case "INC":
-                        FilterQueries.INCQuery(Query, C, CNum);
-                        break;
-                    case "OR":
-                        FilterQueries.ORQuery(Query, C);
-                        break;
-                    case "ORF":
-                        FilterQueries.ORFQuery(Query, C);
-                        break;
-                    case "AND":
-                        FilterQueries.ANDQuery(Query, C);
-                        break;
-                    case "ANDF":
-                        FilterQueries.ANDFQuery(Query, C);
-                        break;
-                    case "EXPR":
-                        FilterQueries.EXPRQuery(Query, C);
-                        break;
-                    case "EQGRS":
-                        FilterQueries.EQGRSQuery(Query, C);
-                        break;
-                    case "EQGR":
-                        FilterQueries.EQGRQuery(Query, C, CNum);
-                        break;
-                    default:
-                        break;
-                }
+                this.querySwitch(C, Query, CNum);
             }
             return Query;
         } catch (err: any) {

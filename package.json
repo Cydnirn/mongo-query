@@ -1,32 +1,31 @@
 {
-    "name": "mongo-query",
-    "version": "1.0.0",
-    "description": "Mongo Query generator mainly for Express",
-    "main": "mongoQuery.js",
-    "scripts": {
-        "test-ts": "ts-mocha src/test/*.spec.ts",
-        "test": "nyc ts-mocha -p tsconfig.json src/test/*.spec.ts",
-        "build": "tsc"
-    },
-    "keywords": [
-        "mongo",
-        "express",
-        "node"
-    ],
+  "name": "mongo-query",
+  "version": "1.0.0",
+  "description": "Mongo Query generator mainly for Express",
+  "main": "mongoQuery.js",
+  "scripts": {
+    "test": "nyc ts-mocha -p tsconfig.json src/test/*.spec.ts",
+    "build": "tsc",
+    "start":"ts-node example.ts"
+  },
     "imports": {
         "#src/*": "./src/*.ts"
     },
-    "author": "Cydnirn",
-    "license": "MIT",
-    "devDependencies": {
-        "@types/chai": "^4.3.11",
-        "@types/mocha": "^10.0.6",
-        "@types/node": "^20.11.5",
-        "chai": "^5.0.0",
-        "mocha": "^10.2.0",
-        "nyc": "^15.1.0",
-        "ts-mocha": "^10.0.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.3.3"
-    }
+  "author": "Seno Aji",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.3.6",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.4.8",
+    "@types/node-cron": "^3.0.8",
+    "chai": "^4.3.8",
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.1",
+    "nyc": "^15.1.0",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.6"
+  }
 }

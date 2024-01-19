@@ -7,6 +7,21 @@ export interface QueryParam<T> {
     value: string | undefined;
     type?: QType;
     input?: QInput | QueryParam<T>[];
+    expect?: string | number | boolean;
+}
+
+function isNewQuery<T>(
+    input: string[] | number[] | boolean[] | QueryParam<T>[]
+) {
+    return input.some((i) => {
+        return (
+            typeof i === "string" ||
+            typeof i === "number" ||
+            typeof i === "boolean"
+        );
+    })
+        ? (input as string[])
+        : genQ<T>(input as QueryParam<T>[]);
 }
 
 function genQ<T>(params: QueryParam<T>[]): QGlobal<T>[] {
@@ -15,9 +30,10 @@ function genQ<T>(params: QueryParam<T>[]): QGlobal<T>[] {
         const Query: QGlobal<T> = {
             input: param.value,
             type: param.type ?? "DEF",
+            expect: param.expect,
             query: param.field,
             queryInput: Array.isArray(param.input)
-                ? genQ(param.input as QueryParam<T>[])
+                ? isNewQuery<T>(param.input)
                 : param.input ?? param.value,
         };
         Q.push(Query);
@@ -26,18 +42,6 @@ function genQ<T>(params: QueryParam<T>[]): QGlobal<T>[] {
 }
 
 export default function mongoQuery<T>(params: QueryParam<T>[]): T {
-    const Q: QGlobal<T>[] = [];
-    for (const param of params) {
-        const Query: QGlobal<T> = {
-            input: param.value,
-            type: param.type ?? "DEF",
-            query: param.field,
-            queryInput: Array.isArray(param.input)
-                ? genQ(param.input as QueryParam<T>[])
-                : param.input ?? param.value,
-        };
-        Q.push(Query);
-    }
-
+    const Q = genQ<T>(params);
     return FilteringFactory.GenerateQuery<T>(Q as QGlobal<string>[]);
 }
